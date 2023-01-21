@@ -10,7 +10,7 @@ let gameOver = false
 let inputDirection = { x: 0, y: 0 }
 let lastInputDirection = { x: 0, y: 0 }
 let newSegments = 0
-
+let gamePoints = 0
 
 // window.displayText
 
@@ -23,10 +23,9 @@ const up = document.getElementById('up');
 const left = document.getElementById('left');
 const down = document.getElementById('down');
 const right = document.getElementById('right');
-const test = document.getElementById('displayText');
 
+const points = document.getElementById('game-points');
 
-console.log()
 
 const gameBoard = document.getElementById("game-board")
 const restartBtn = document.getElementById("restart-btn")
@@ -43,6 +42,8 @@ const EXPANSION_RATE = 5
 function updateFood() {
     if (onSnake(food)) {
         expandSnake(EXPANSION_RATE)
+        gamePoints += EXPANSION_RATE
+        points.innerHTML = gamePoints.toString()
         food = getRandomFoodPosition()
     }
 }
@@ -81,36 +82,44 @@ function outsideGrid(position) {
 
 
 
-window.addEventListener('microphone', e => {
-    switch (e.command) {
-        default:
-            break
-        case 'Up':
-            if (lastInputDirection.y !== 0) break
-            inputDirection = { x: 0, y: -1 }
-            break
-
-        case 'Down':
-            if (lastInputDirection.y !== 0) break
-            inputDirection = { x: 0, y: 1 }
-            break
-
-        case 'Left':
-            if (lastInputDirection.x !== 0) break
-            inputDirection = { x: -1, y: 0 }
-            break
-
-        case 'Right':
-            if (lastInputDirection.x !== 0) break
-            inputDirection = { x: 1, y: 0 }
-            break
-
-    }
-})
-
 function getInputDirection() {
     lastInputDirection = inputDirection
     return inputDirection
+}
+
+function micMovement() {
+    switch (window.displayText) {
+        default:
+            break
+        case 'up':
+            if (lastInputDirection.y !== 0) break
+            inputDirection = { x: 0, y: -1 }
+            buttons.forEach(button => button.classList.remove('active'));
+            up.classList.add('active');
+            break
+
+        case 'down':
+            if (lastInputDirection.y !== 0) break
+            inputDirection = { x: 0, y: 1 }
+            buttons.forEach(button => button.classList.remove('active'));
+            down.classList.add('active');
+            break
+
+        case 'left':
+            if (lastInputDirection.x !== 0) break
+            inputDirection = { x: -1, y: 0 }
+            buttons.forEach(button => button.classList.remove('active'));
+            left.classList.add('active');
+            break
+
+        case 'right':
+            if (lastInputDirection.x !== 0) break
+            inputDirection = { x: 1, y: 0 }
+            buttons.forEach(button => button.classList.remove('active'));
+            right.classList.add('active');
+            break
+
+    }
 }
 
 
@@ -189,9 +198,9 @@ function main(currentTime) {
 }
 
 up.addEventListener('click', () => {
-    console.log(window.displayText)
-    //if (lastInputDirection.y !== 0) return
-    //inputDirection = { x: 0, y: -1 }
+    // console.log(gamePoints)
+    if (lastInputDirection.y !== 0) return
+    inputDirection = { x: 0, y: -1 }
 });
 
 
@@ -206,14 +215,12 @@ left.addEventListener('click', () => {
 down.addEventListener('click', () => {
     if (lastInputDirection.y !== 0) return
     inputDirection = { x: 0, y: 1 }
-
-
 });
 
 
 right.addEventListener('click', () => {
-    //if (this.state.displayText === "right" || this.state.displayText === "Right") return
-    //inputDirection = { x: 1, y: 0 }
+    if (lastInputDirection.x !== 0) return
+    inputDirection = { x: 1, y: 0 }
 });
 
 
@@ -223,6 +230,7 @@ right.addEventListener('click', () => {
 window.requestAnimationFrame(main)
 
 function update() {
+    micMovement()
     updateSnake()
     updateFood()
     checkDeath()
