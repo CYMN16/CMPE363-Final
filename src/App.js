@@ -61,7 +61,8 @@ export default class App extends Component {
       }
       window.displayText = displayText;
       this.setState({
-        displayText: displayText
+        displayText: displayText,
+        tableHtml : window.tableHtml
       });
     });
 
@@ -72,6 +73,7 @@ export default class App extends Component {
       <Container className="app-container">
         <Helmet>
           <title>Accessibility Snake Game</title>
+        
         </Helmet>
 
         <body>
@@ -93,18 +95,19 @@ export default class App extends Component {
 
               </div>
               <div id="mic-result" className="output-display rounded">
-                <p>{this.state.displayText}</p>
+                <p>{this.state.tableHtml}</p>
               </div>
               <button id="microphone-btn" onClick={() => this.sttFromMic()}>Input With Microphone</button>
               <div id="name-field">
                 <button id="submit-btn" /*onClick={() => this.somefunc()}*/>Submit</button>
-                <input type="text" id="submit-text" placeholder="Enter your username"></input>
+                <input type="text" id="username-container" placeholder="Enter your username"></input>
               </div>
 
             </div>
             <div id="game-board"></div>
             <div>
-              <table><tr><th>id</th><th>name</th><th>surname</th><th>phone</th><th>address</th></tr></table>
+              <div id = "response-container">
+              </div>
             </div>
           </div>
 
@@ -112,6 +115,9 @@ export default class App extends Component {
 
         <Helmet>
           <script type="module" src="./game.js"></script>
+          <script>
+            
+          </script>
         </Helmet>
 
       </Container>

@@ -5,6 +5,12 @@
 //import { update as foodUpdate, draw as foodDraw } from './food.js'
 //import { outsideGrid } from './grid.js'
 //import { getText } from './global.js'
+
+
+
+const api = "/api/database"
+
+
 let lastRenderTime = 0
 let gameOver = false
 let inputDirection = { x: 0, y: 0 }
@@ -19,6 +25,9 @@ const snakeBody = [
     { x: 10, y: 11 }
 ]
 
+var responseContainer = document.getElementById('response-container');
+const submitButton = document.getElementById('submit-btn');
+const usernameContainer = document.getElementById('username-container');
 const up = document.getElementById('up');
 const left = document.getElementById('left');
 const down = document.getElementById('down');
@@ -38,6 +47,53 @@ buttons.forEach(button => button.classList.remove('active'));
 
 let food = { x: 10, y: 2 }
 const EXPANSION_RATE = 5
+
+function listRequest() {
+
+    fetch(`${api}`, {
+        method: "GET",
+        headers: { 'Content-Type': 'application/json' },
+    })
+        .then(response => response.json())
+        .then(responseJson => {
+            // Parse the JSON response and create an HTML table to display it
+            let tableHtml = '<table><tr><th>id</th><th>username</th><th>hscore</th></tr>';
+
+            responseJson.forEach(element => {
+
+                tableHtml += `<tr><td>${element["id"]}</td><td>${element["name"]}</td><td>${element["hscore"]}</td></tr>`;
+
+            });
+            tableHtml += '</table>';
+            responseContainer.innerHTML = tableHtml;
+        });
+};
+
+
+function sendScore() {
+
+    var sendBody = {
+        "username": document.getElementById('username-container').value,
+        "hscore": gamePoints
+    };
+
+    console.log(JSON.stringify(sendBody))
+
+    fetch(`${api}/`, {
+        method: "PUT",
+        mode: "cors",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json' },
+        body: JSON.stringify(sendBody)
+    })
+
+        .then(response => response.json())
+        .catch(err => {
+            console.log(err);
+        });
+
+}
 
 function updateFood() {
     if (onSnake(food)) {
@@ -175,11 +231,15 @@ function addSegments() {
 if (restartBtn) {
     restartBtn.addEventListener('click', func => {
         window.location = '/'
+        
     })
 }
 
 
 function main(currentTime) {
+    
+    
+    
     if (gameOver) {
         // eslint-disable-next-line no-restricted-globals
         if (confirm('You Lost, press ok to restart')) {
@@ -219,12 +279,15 @@ down.addEventListener('click', () => {
 
 
 right.addEventListener('click', () => {
+    listRequest()
     if (lastInputDirection.x !== 0) return
     inputDirection = { x: 1, y: 0 }
 });
 
 
-
+submitButton.addEventListener('click', () => {
+    sendScore()
+})
 
 
 window.requestAnimationFrame(main)

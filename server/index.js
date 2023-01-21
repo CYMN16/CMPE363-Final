@@ -4,9 +4,18 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const pino = require('express-pino-logger')();
 
+const cors = require('cors');
+
+
+
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(pino);
+app.use(cors());
+app.use(bodyParser.json());
+
+var databaseFunctions = require('./database/databaseFunc.js');
+const { Router } = require('express');
 
 app.get('/api/get-speech-token', async (req, res, next) => {
     res.setHeader('Content-Type', 'application/json');
@@ -30,6 +39,22 @@ app.get('/api/get-speech-token', async (req, res, next) => {
             res.status(401).send('There was an error authorizing your speech key.');
         }
     }
+});
+
+app.get('/api/database',async (req, res) => {
+
+    var highscores = await databaseFunctions.listHscores();
+    res.send(highscores);
+
+});
+
+app.put('/api/database',async (req, res) => {
+    console.log(req.body)
+
+    var scoredata = req.body;
+    await databaseFunctions.insertScore(scoredata);
+    res.send("Your high score has been inserted to database.");
+
 });
 
 app.listen(3001, () =>
