@@ -57,13 +57,18 @@ function listRequest() {
         .then(response => response.json())
         .then(responseJson => {
             // Parse the JSON response and create an HTML table to display it
-            let tableHtml = '<table><tr><th>id</th><th>username</th><th>hscore</th></tr>';
+            let tableHtml = '<table class="hscore-table"><tr><th class="col">Username</th><th class="col">High-score</th></tr>';
+            var element
+            for(let i=0; i<8; i++){
+                element = responseJson[i]
+                console.log(element)
+                tableHtml += `<tr><td class="tab">${element["name"]}</td><td class="tab">${element["hscore"]}</td></tr>`;
+            }
+            // responseJson.forEach(element => {
 
-            responseJson.forEach(element => {
+                
 
-                tableHtml += `<tr><td>${element["id"]}</td><td>${element["name"]}</td><td>${element["hscore"]}</td></tr>`;
-
-            });
+            // });
             tableHtml += '</table>';
             responseContainer.innerHTML = tableHtml;
         });
@@ -235,10 +240,13 @@ if (restartBtn) {
     })
 }
 
-
+let showDB = true
 function main(currentTime) {
     
-    
+    if(showDB){
+        listRequest()
+        showDB = false
+    }
     
     if (gameOver) {
         // eslint-disable-next-line no-restricted-globals
@@ -279,7 +287,6 @@ down.addEventListener('click', () => {
 
 
 right.addEventListener('click', () => {
-    listRequest()
     if (lastInputDirection.x !== 0) return
     inputDirection = { x: 1, y: 0 }
 });
