@@ -14,7 +14,7 @@ export default class App extends Component {
     super(props);
 
     this.state = {
-      displayText: 'INITIALIZED: ready to test speech...'
+      displayText: 'Ready to take microphone input'
     }
   }
 
@@ -38,7 +38,7 @@ export default class App extends Component {
     const recognizer = new speechsdk.SpeechRecognizer(speechConfig, audioConfig);
 
     this.setState({
-      displayText: 'speak into your microphone...'
+      displayText: 'Speak into your microphone'
     });
 
     recognizer.recognizeOnceAsync(result => {
@@ -62,7 +62,7 @@ export default class App extends Component {
       window.displayText = displayText;
       this.setState({
         displayText: displayText,
-        tableHtml : window.tableHtml
+        tableHtml: window.tableHtml
       });
     });
 
@@ -73,12 +73,12 @@ export default class App extends Component {
       <Container className="app-container">
         <Helmet>
           <title>Accessibility Snake Game</title>
-        
+
         </Helmet>
 
         <body>
           <div id="accessibility">
-            <h3>Accessibility <span id="snake">Snake</span> Game</h3>
+            <h3 id="accessibility-text">Accessibility <span id="snake">Snake</span> Game</h3>
             <button id="restart-btn">Restart</button>
 
           </div>
@@ -91,23 +91,22 @@ export default class App extends Component {
                 <button id="down" class="arrow-key active">&#8595;</button>
                 <button id="right" class="arrow-key active">&#8594;</button>
               </div>
-              <div id="speak">
-
-              </div>
+              <div id="speak"></div>
               <div id="mic-result" className="output-display rounded">
-                <p>{this.state.tableHtml}</p>
+                <p>{this.state.displayText}</p>
               </div>
               <button id="microphone-btn" onClick={() => this.sttFromMic()}>Input With Microphone</button>
               <div id="name-field">
-                <button id="submit-btn" /*onClick={() => this.somefunc()}*/>Submit</button>
+                <button id="submit-btn">Submit</button>
                 <input type="text" id="username-container" placeholder="Enter your username"></input>
               </div>
+
+              <div id="response-container"></div>
 
             </div>
             <div id="game-board"></div>
             <div>
-              <div id = "response-container">
-              </div>
+
             </div>
           </div>
 
@@ -116,7 +115,7 @@ export default class App extends Component {
         <Helmet>
           <script type="module" src="./game.js"></script>
           <script>
-            
+
           </script>
         </Helmet>
 
