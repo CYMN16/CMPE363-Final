@@ -24,7 +24,11 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
+      - name: npm audit fix
+        run: |
           npm audit fix --force
+      - name: npm run dev
+        run: |
           npm run dev
 
       - name: Upload artifact for deployment job
